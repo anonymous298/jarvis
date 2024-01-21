@@ -9,6 +9,7 @@ import time
 import os
 import pyjokes
 import winsound
+import random
 
 # creating an engine that will speak
 engine = pyttsx3.init()
@@ -92,7 +93,7 @@ def readtask():
                     break
 
                 elif 'who made you' in tasks or 'who created you' in tasks:
-                    speak("I have, been created by, Sir Talha, the greates of all time ")
+                    speak("I have, been created by, Sir Talha, the ,greates,of ,all ,time ")
                     speak("I am a virtual assistant")
                     speak("And my name is Jarvis")
 
@@ -160,19 +161,89 @@ def readtask():
                         print(e)    
 
                 # it will open github
-                elif 'open github' in tasks or 'github' in tasks:
-                    speak('opening github')
+                elif 'open github desktop' in tasks:
+                    speak('opening github desktop')
                     webbrowser.open('https://github.com/')
+
+                elif 'open github' in tasks:
+                    speak('opening github')
+                    os.system()
 
                 # it will open stackoverflow
                 elif 'open stackoverflow' in tasks or 'stackoverflow' in tasks:
                     speak('opening stackoverflow')
                     webbrowser.open('https://stackoverflow.com/')
 
+                # it will open vs code
                 elif 'open vs code' in tasks:
                     speak('opening vscode')
-                    os.system('start vscode')
+                    os.system('code')
+
+                # it will close vs code
+                elif 'close vs code' in tasks:
+                    speak('closing vscode')
+                    os.system('taskkill /f /im code.exe')
+
+                # it will open file explorer
+                elif 'open file explorer' in tasks:
+                    speak('opening file explorer')
+                    os.system('explorer')
                 
+                # it will close file explorer
+                elif 'close file explorer' in tasks:
+                    speak('closing file explorer')
+                    os.system('taskkill /f /im explorer.exe')
+
+                # it will restart my computer
+                elif 'restart my computer' in tasks or 'restart my pc' in tasks:
+                    speak('restarting my computer')
+                    for i in range(5,0,-1):
+                        print(i)
+                        speak(i)
+                        time.sleep(1)
+                    os.system('shutdown /r /t 1')
+
+                # it will shutdown my computer
+                elif 'shutdown my computer' in tasks or 'shutdown my pc' in tasks:
+                    speak('shutting down my computer')
+                    for i in range(5,0,-1):
+                        print(i)
+                        speak(i)
+                        time.sleep(1)
+                    os.system('shutdown /s /t 1')
+                
+                # it will play music
+                elif 'play music' in tasks:
+                    music_dir = "C:\\Users\\TALHA PC\\OneDrive\\Desktop\\music"
+                    songs = os.listdir(music_dir)
+
+                    speak("what music should i play sir")
+                    speak("Did you want me to play some random music")
+                    speak("Or i will put all the list of the songs")
+
+                    mymusic = takecommand().lower()
+
+                    if 'play random music' in mymusic or 'random' in mymusic:
+                        speak("playing random music")
+                        rd = random.choice(songs)
+                        os.startfile(os.path.join(music_dir, rd))
+
+                    elif 'put list' in mymusic or 'list' in mymusic:
+                        speak("putting list of the songs")
+                        for song in songs:
+                            print(song)
+                            speak(song)
+
+                        user_song = takecommand().lower()
+
+                        if user_song in songs:
+                            speak("playing " + user_song)
+                            os.startfile(os.path.join(music_dir, user_song))
+
+                elif 'close music' in tasks:
+                    speak("closing music")
+                    os.system('taskkill /f /im wmplayer.exe')
+
                 # when the user if else statement works then it will execute this
                 # or when the user says anything else then it will execute this
                 speak("Sir what should i do for you")
