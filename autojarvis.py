@@ -12,7 +12,7 @@ import winsound
 import random
 
 # creating an engine that will speak
-engine = pyttsx3.init()
+engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
 
@@ -27,7 +27,7 @@ def takecommand():
     with sr.Microphone() as source:
         print("Listening...")
         r.pause_threshold = 1
-        audio = r.listen(source,phrase_time_limit=10)
+        audio = r.listen(source,phrase_time_limit=5)
 
     try:
         print("Recognizing...")
@@ -74,7 +74,7 @@ def readtask():
     # executes the tasks
     # if user calls jarvis then it will execute the if statement
     if 'jarvis' in query or 'hello' in query:
-        speak('yes sir what can i do for you')
+        speak('yes sir Talha, what can i do for you')
 
         # it will take command from user
         while True:
@@ -88,14 +88,21 @@ def readtask():
 
                 # if user says 'nothing' or 'kuch Nahin' or 'bye' then it will exit
                 if 'nothing' in tasks or 'kuch Nahin' in tasks or 'bye' in tasks:
-                    speak('ok sir i am going to sleep')
+                    speak('ok sir i am going to sleep wake me up when you need me')
                     print("i am going to sleep")
                     break
 
+                # it will tell you name of the creator of jarvis
                 elif 'who made you' in tasks or 'who created you' in tasks:
                     speak("I have, been created by, Sir Talha, the ,greates,of ,all ,time ")
                     speak("I am a virtual assistant")
                     speak("And my name is Jarvis")
+
+                # it will tell time
+                elif 'tell me the time' in tasks or 'time' in tasks:
+                    t = time.strftime("%I:%M %p")
+                    print(t)
+                    speak(f"The time is {t}")
 
                 # it will open instagram
                 elif 'open instagram' in tasks:
@@ -167,10 +174,14 @@ def readtask():
 
                 elif 'open github' in tasks:
                     speak('opening github')
-                    os.system()
+                    os.system('start github')
+
+                elif 'close github' in tasks:
+                    speak('closing github')
+                    os.system('taskkill /f /im github.exe')
 
                 # it will open stackoverflow
-                elif 'open stackoverflow' in tasks or 'stackoverflow' in tasks:
+                elif 'open stack overflow' in tasks or 'stack overflow' in tasks:
                     speak('opening stackoverflow')
                     webbrowser.open('https://stackoverflow.com/')
 
@@ -195,7 +206,7 @@ def readtask():
                     os.system('taskkill /f /im explorer.exe')
 
                 # it will restart my computer
-                elif 'restart my computer' in tasks or 'restart my pc' in tasks:
+                elif 'restart my system' in tasks or 'restart my pc' in tasks:
                     speak('restarting my computer')
                     for i in range(5,0,-1):
                         print(i)
@@ -204,7 +215,7 @@ def readtask():
                     os.system('shutdown /r /t 1')
 
                 # it will shutdown my computer
-                elif 'shutdown my computer' in tasks or 'shutdown my pc' in tasks:
+                elif 'shut down my system' in tasks or 'shut down my pc' in tasks:
                     speak('shutting down my computer')
                     for i in range(5,0,-1):
                         print(i)
@@ -240,9 +251,27 @@ def readtask():
                             speak("playing " + user_song)
                             os.startfile(os.path.join(music_dir, user_song))
 
-                elif 'close music' in tasks:
-                    speak("closing music")
-                    os.system('taskkill /f /im wmplayer.exe')
+                # it will tell me a joke
+                elif 'tell me a joke' in tasks:
+                    joke = pyjokes.get_joke()
+                    print(joke)
+                    speak(joke)
+                
+                # it will search on wikipedia
+                elif 'wikipedia' in tasks:
+                    speak('exploring wikipedia')
+                    speak('what should you want to explore')
+
+                    query = takecommand().lower()
+                    results = wikipedia.summary(query, sentences=2)
+
+                    print("Searching on wikipedia...")
+                    speak("Searching")
+
+                    speak("according to wikipedia")
+                    print(results)
+                    speak(results)
+
 
                 # when the user if else statement works then it will execute this
                 # or when the user says anything else then it will execute this
@@ -253,7 +282,9 @@ def readtask():
             except Exception as e:
                 print(e)
                 speak("Sorry sir i am not able to do this task")
+                speak("say another task")
 
+# this function will continuesly run and append text into myfile.txt
 def jarvis():
     while True:
         query = takecommand().lower()
