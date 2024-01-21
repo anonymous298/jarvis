@@ -410,11 +410,13 @@ def readtask():
                     pyautogui.press('m')
                     pyautogui.keyUp('win')
 
+                # it will search on google
                 elif 'news' in tasks:
                     speak("please wait sir")
                     speak("fetching the latest news")
                     news()
 
+                # it will search on google
                 elif 'temperature' in tasks:
                     search = "temperature in karachi"
                     url = f"https://www.google.com/search?q={search}"
