@@ -180,6 +180,7 @@ def readtask():
                     speak('opening youtube')
                     webbrowser.open('https://www.youtube.com/')
 
+                # it will play video on youtube
                 elif 'play video' in tasks:
                     speak('what should i play on youtube')
                     myvideo = takecommand().lower()
@@ -187,13 +188,89 @@ def readtask():
                     speak('playing' + myvideo)
                     kit.playonyt(myvideo)
                 
+                # it will play or pause on youtube
+                elif 'pause' in tasks or 'unpause' in tasks:
+                    pyautogui.press('playpause')
+
+                # it will mute 
+                elif 'mute' in tasks:
+                    speak('muting')
+                    pyautogui.press('m')
+
+                # it will unmute
+                elif 'unmute' in tasks:
+                    speak('turning sound on')
+                    pyautogui.press('m')
+
+                # it will control the volume
+                elif 'volume' in tasks:
+                    speak('volume up or volume down')
+                    while True:
+                        vol = takecommand().lower()
+
+                        if 'up' in vol:
+                            pyautogui.press('volumeup')
+
+                        elif 'down' in vol:
+                            pyautogui.press('volumedown')
+
+                        elif 'done' in vol:
+                            speak('ok sir i am done with volume control')
+                            break
+
+                # it will full screen
+                elif 'full screen' in tasks:
+                    speak('Entering full screen mode')
+                    pyautogui.press('f')
+
+                elif 'normal mode' in tasks:
+                    speak("Entering normal mode")
+                    pyautogui.press('f')
+                
+                # it will threater mode
+                elif 'theater mode' in tasks or 'theatre' in tasks:
+                    speak('Entering theatre mode')
+                    pyautogui.press('t')
+
+                # it will switch tab
+                elif 'switch tab' in tasks:
+                    speak('switching tab')
+                    pyautogui.hotkey('ctrl', 'tab')
+
                 # it will open google
                 elif 'open google' in tasks:
+                    speak('opening google')
+                    webbrowser.open('https://www.google.com/')
+
+                # it will search on google
+                elif 'google search' in tasks:
+                    speak('what should you want to search on google')
+                    cm = takecommand().lower()
+
+                    speak('searching')
+                    print(cm)
+
+                    pyautogui.write(cm)
+                    pyautogui.press('enter')
+
+
+                # it will open google
+                elif 'search on google' in tasks:
                     speak('what should i search on google')
                     mysearch = takecommand().lower()
 
                     speak('opening google')
                     webbrowser.open(f'https://www.google.com/search?q={mysearch}')
+
+                # it will open new tab
+                elif 'new tab' in tasks:
+                    speak('opening new tab')
+                    pyautogui.hotkey('ctrl', 't')
+
+                # it will close tab
+                elif 'close tab' in tasks:
+                    speak('closing tab')
+                    pyautogui.hotkey('ctrl', 'w')
 
                 # it will close google
                 elif 'close google' in tasks:
@@ -425,6 +502,8 @@ def readtask():
                     temp = data.find("div", class_ = "BNeawe").text
                     print(f"current {search} is {temp}")
                     speak(f"current {search} is {temp}")
+
+                   
 
 
                 # when the user if else statement works then it will execute this
