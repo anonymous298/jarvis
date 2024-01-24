@@ -12,6 +12,7 @@ import winsound
 import random
 import pyautogui
 import requests
+import sys
 from bs4 import BeautifulSoup
 
 # creating an engine that will speak
@@ -29,12 +30,13 @@ def takecommand():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
-        r.pause_threshold = 1
-        audio = r.listen(source,phrase_time_limit=5)
+        r.pause_threshold = 0.5
+        audio = r.listen(source, phrase_time_limit=8)
 
     try:
         print("Recognizing...")
         query = r.recognize_google(audio, language='en-in')
+        query = query.lower()
         print(f"user said: {query}")
 
     except Exception as e:
@@ -47,12 +49,13 @@ def takecommand():
 # creating a timer function that will set a timer
 def timer():
     frequency = 2500
-    duration = 50
+    duration = 15
 
     speak("How much time should i set")
 
     # it will take secondes from user
     num = takecommand()
+    num = num.replace('seconds','')
     speak('setting timer for' + num + 'seconds')
     print('setting timer for' + num + 'seconds')
 
@@ -113,7 +116,7 @@ def readtask():
     # executes the tasks
     # if user calls jarvis then it will execute the if statement
     if 'jarvis' in query or 'hello' in query or 'wake up jarvis' in query:
-        speak(f'Welcome, sir talha, its {time.strftime("%I:%M %p")}, how can i help you')
+        speak(f'Welcome sir talha, its {time.strftime("%I:%M %p")}, how can i help you')
         print(f'Welcome, sir talha, its {time.strftime("%I:%M %p")}, how can i help you')
 
         # it will take command from user
@@ -122,7 +125,7 @@ def readtask():
             try:
                 
                 # it will take command from user
-                tasks = takecommand().lower()
+                tasks = takecommand()
 
                 # the commands that user gives will be match here
 
@@ -138,6 +141,34 @@ def readtask():
                     speak("I have, been created by, Sir Talha, the ,greates,of ,all ,time ")
                     speak("I am a virtual assistant")
                     speak("And my name is Jarvis")
+
+                elif 'who am i speaking with' in tasks:
+                    speak("I am jarvis, i am a advanced artificial intelligence, created by sir muhammad talha")
+                    speak("My name stands for just a rather very intelligent system, and i am here to help you")
+
+                elif 'what is your purpose' in tasks:
+                    speak("as jarvis, my purpose is you to serve as your trusted virtual assistant, just as i did for tony stark in the iron man movies, and i am here to assest you with various tasks and provide you with information and guidance")
+
+                elif 'where i am' in tasks or 'where you we' in tasks:
+                    speak('Wait sir, let me check right now')
+                    try:
+                        ipAdd = requests.get('https://api.ipify.org').text
+                        # print(ipAdd)
+
+                        url = 'https://get.geojs.io/v1/ip/geo/' + ipAdd + '.json'
+                        geo_requests = requests.get(url)
+                        geo_data = geo_requests.json()
+
+                        city = geo_data['city']
+
+                        # state = geo_data['state']
+                        country = geo_data['country']
+                        speak(f"Sir i am not sure but you are currently in {city} , {country} ")
+
+                    except Exception as e:
+                        speak("Sorry sir, due to some error i can't find where we are")
+                        print("Sorry sir, due to some error i can't find where we are")
+                        
 
                 # it will tell you about yourself
                 elif 'how are you' in tasks:
@@ -165,7 +196,7 @@ def readtask():
                             speak('ok no problem')
 
                 # it will tell time
-                elif 'tell me the time' in tasks or 'time' in tasks:
+                elif 'tell me the time' in tasks or 'show me the time' in tasks or 'what is time' in tasks or 'what time is it' in tasks:
                     t = time.strftime("%I:%M %p")
                     print(t)
                     speak(f"The time is {t}")
@@ -175,15 +206,43 @@ def readtask():
                     speak('opening instagram')
                     webbrowser.open('https://www.instagram.com/')
 
+                # it will send message to ayesha on instagram
+                elif 'send message to ayesha on instagram' in tasks:
+                    speak("Sir what message should i sent")
+                    message = takecommand()
+                    
+                    speak("opening instagram")
+                    webbrowser.open('https://www.instagram.com/direct/t/17850680546691592/')
+                    speak('sending message')
+
+                    time.sleep(3)
+                    pyautogui.typewrite(message)
+                    pyautogui.press('enter')
+                    speak('message sent successfully')
+
+                # it will send message to javeria on instagram
+                elif 'send message to javeria on instagram' in tasks:
+                    speak("Sir what message should i sent")
+                    message = takecommand()
+                    
+                    speak("opening instagram")
+                    webbrowser.open('https://www.instagram.com/direct/t/17842809620526788/')
+                    speak('sending message')
+
+                    time.sleep(3)
+                    pyautogui.typewrite(message)
+                    pyautogui.press('enter')
+                    speak('message sent successfully')
+
                 # it will open youtube
                 elif 'open youtube' in tasks:
                     speak('opening youtube')
                     webbrowser.open('https://www.youtube.com/')
 
                 # it will play video on youtube
-                elif 'play video' in tasks:
+                elif 'play video on youtube' in tasks:
                     speak('what should i play on youtube')
-                    myvideo = takecommand().lower()
+                    myvideo = takecommand()
 
                     speak('playing' + myvideo)
                     kit.playonyt(myvideo)
@@ -198,7 +257,7 @@ def readtask():
                     pyautogui.press('m')
 
                 # it will unmute
-                elif 'unmute' in tasks:
+                elif 'soundmax' in tasks:
                     speak('turning sound on')
                     pyautogui.press('m')
 
@@ -206,7 +265,7 @@ def readtask():
                 elif 'volume' in tasks:
                     speak('volume up or volume down')
                     while True:
-                        vol = takecommand().lower()
+                        vol = takecommand()
 
                         if 'up' in vol:
                             pyautogui.press('volumeup')
@@ -223,6 +282,7 @@ def readtask():
                     speak('Entering full screen mode')
                     pyautogui.press('f')
 
+                # it will exit full screen
                 elif 'normal mode' in tasks:
                     speak("Entering normal mode")
                     pyautogui.press('f')
@@ -232,6 +292,16 @@ def readtask():
                     speak('Entering theatre mode')
                     pyautogui.press('t')
 
+                # it will exit theatre mode
+                elif 'scroll down' in tasks:
+                    speak('Scrolling down')
+                    pyautogui.press('pagedown')
+
+                # it will exit theatre mode
+                elif 'scroll up' in tasks:
+                    speak('Scrolling up')
+                    pyautogui.press('pageup')   
+                
                 # it will switch tab
                 elif 'switch tab' in tasks:
                     speak('switching tab')
@@ -245,19 +315,19 @@ def readtask():
                 # it will search on google
                 elif 'google search' in tasks:
                     speak('what should you want to search on google')
-                    cm = takecommand().lower()
+                    cm = takecommand()
 
-                    speak('searching')
+                    speak(f'searching {cm} on google')
                     print(cm)
 
+                    pyautogui.press('browsersearch')
                     pyautogui.write(cm)
                     pyautogui.press('enter')
-
 
                 # it will open google
                 elif 'search on google' in tasks:
                     speak('what should i search on google')
-                    mysearch = takecommand().lower()
+                    mysearch = takecommand()
 
                     speak('opening google')
                     webbrowser.open(f'https://www.google.com/search?q={mysearch}')
@@ -266,6 +336,10 @@ def readtask():
                 elif 'new tab' in tasks:
                     speak('opening new tab')
                     pyautogui.hotkey('ctrl', 't')
+
+                elif 'reload tab' in tasks or 'refresh tab' in tasks:   
+                    speak('reloading tab')
+                    pyautogui.press('browserrefresh')
 
                 # it will close tab
                 elif 'close tab' in tasks:
@@ -303,7 +377,7 @@ def readtask():
                     os.system('taskkill /f /im notepad.exe')
 
                 # it will set the timer 
-                elif 'timer' in tasks:
+                elif 'set timer' in tasks:
                     try:
                         timer()    
 
@@ -315,10 +389,12 @@ def readtask():
                     speak('opening github desktop')
                     webbrowser.open('https://github.com/')
 
+                # it will open github
                 elif 'open github' in tasks:
                     speak('opening github')
                     os.system('start github')
 
+                # it will close github
                 elif 'close github' in tasks:
                     speak('closing github')
                     os.system('taskkill /f /im github.exe')
@@ -355,7 +431,7 @@ def readtask():
                         print(i)
                         speak(i)
                         time.sleep(1)
-                    os.system('shutdown /r /t 1')
+                    os.system('shutdown /r /t 1')         
 
                 # it will shutdown my computer
                 elif 'shut down my system' in tasks or 'shut down my pc' in tasks:
@@ -435,6 +511,7 @@ def readtask():
 
                         msg = takecommand().lower()
                         kit.sendwhatmsg_instantly(javeria, msg, 10, tab_close=True)
+                        pyautogui.press('enter')
 
                     elif 'farhan' in name:
                         speak("what should i send")
@@ -442,6 +519,7 @@ def readtask():
 
                         msg = takecommand().lower()
                         kit.sendwhatmsg_instantly(farhan, msg, 10, tab_close=True)
+                        pyautogui.press('enter')
 
                     elif 'abid' in name:
                         speak("what should i send")
@@ -466,9 +544,17 @@ def readtask():
 
                 # it will take a screenshot
                 elif "screenshot" in tasks:
-                    speak("taking screenshot")
-                    img = pyautogui.screenshot(f'screenshot.png')
-                    img.save(f'C:\\Users\\TALHA PC\\OneDrive\\Desktop\\screenshots\\screenshot.png')
+                    speak("Sir, tell me the name of this screenshot file")
+                    print("Sir, tell me the name of this screenshot file")
+                    name = takecommand()
+
+                    speak("please sir hold the screen for few seconds, i am taking screenshot")
+                    time.sleep(2)
+
+                    img = pyautogui.screenshot()
+                    img.save(f"C:\\Users\\TALHA PC\\OneDrive\\Desktop\\screenshots\\{name}.png")
+                    speak("Done sir, the screenshot has been saved to our main folder")
+                    print("Done sir, the screenshot has been saved to our main folder")
 
                 # it will switch window
                 elif 'switch window' in tasks:
@@ -487,6 +573,11 @@ def readtask():
                     pyautogui.press('m')
                     pyautogui.keyUp('win')
 
+                elif 'close this' in tasks:
+                    speak("closing this")
+                    pyautogui.hotkey('alt', 'f4')
+
+
                 # it will search on google
                 elif 'news' in tasks:
                     speak("please wait sir")
@@ -494,7 +585,7 @@ def readtask():
                     news()
 
                 # it will search on google
-                elif 'temperature' in tasks:
+                elif 'temperature' in tasks or 'weather' in tasks:
                     search = "temperature in karachi"
                     url = f"https://www.google.com/search?q={search}"
                     r = requests.get(url)
@@ -503,13 +594,45 @@ def readtask():
                     print(f"current {search} is {temp}")
                     speak(f"current {search} is {temp}")
 
-                   
+                # it will open speech to text
+                elif 'speech to text mode' in tasks:
+                    speak("opening speech to text mode")
+                    print("opening speech to text mode")
+
+                    speak('please speak your text')
+                    print("please speak your text")
+
+                    speech = takecommand()
+
+                    speak("converting speech to text")
+                    print("converting speech to text")
+                    pyautogui.write(speech)
+
+                    speak('Sir, do you want to enter this text')
+
+                    while True:
+                        cm = takecommand()
+
+                        if 'yes' in cm:
+                            pyautogui.press('enter')
+                            speak("Sir entered successfully")
+                            print("Sir entered successfully")
+                            break
+
+                        elif 'no' in cm:
+                            speak("ok sir no problem")
+                            break
+
+                        else:
+                            speak("Say yes or no sir")
 
 
+                elif 'jarvis' in tasks:
+                    speak("I am always here for you sir")
                 # when the user if else statement works then it will execute this
                 # or when the user says anything else then it will execute this
-                speak("Sir how may i help you")
-                print("Sir how may i help you")
+                speak("Sir what can i do for you")
+                print("Sir what can i do for you")
 
             # in case of any error
             except Exception as e:
