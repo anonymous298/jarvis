@@ -13,12 +13,13 @@ import random
 import pyautogui
 import requests
 import sys
+import pygame
 from bs4 import BeautifulSoup
 
 # creating an engine that will speak
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+engine.setProperty('voice', voices[1].id)
 
 # creating an speak function that will speak
 def speak(audio):
@@ -30,8 +31,9 @@ def takecommand():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
+        r.adjust_for_ambient_noise(source)
         r.pause_threshold = 0.5
-        audio = r.listen(source, phrase_time_limit=8)
+        audio = r.listen(source )
 
     try:
         print("Recognizing...")
@@ -55,7 +57,11 @@ def timer():
 
     # it will take secondes from user
     num = takecommand()
-    num = num.replace('seconds','')
+    if 'for' and 'seconds' in num or 'second' in num:
+        num = num.replace('for', '')
+        num = num.replace('seconds', '')
+        num = num.replace('second', '')
+
     speak('setting timer for' + num + 'seconds')
     print('setting timer for' + num + 'seconds')
 
@@ -106,8 +112,66 @@ def news():
         print(f"today's {day[i]} news is: {head[i]}")
         speak(f"today's {day[i]} news is: {head[i]}")
 
+def sleep_alarm():
+    frequency = 3200
+    duration = 100
+    for i in range(20):
+        winsound.Beep(frequency, duration)
+        time.sleep(0.2)
+        winsound.Beep(frequency, duration)
+        time.sleep(1.5)
+
+def start_up():
+    audio_file = 'audio/startup.mp3'
+    
+    pygame.init()
+    pygame.mixer.music.load(audio_file)
+    pygame.mixer.music.play()
+
+    # Wait for the audio to finish playing
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
+
+
+def shut_down():
+    audio_file = 'audio/shutdown.mp3'
+
+    pygame.init()
+    pygame.mixer.music.load(audio_file)
+    pygame.mixer.music.play()
+
+    # Wait for the audio to finish playing
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
+
+
+def charge():
+    audio_file = 'audio/charge.mp3'
+
+    pygame.init()
+    pygame.mixer.music.load(audio_file)
+    pygame.mixer.music.play()
+
+    # Wait for the audio to finish playing
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
+
+def task_complete():
+    audio_file = 'audio/complete.mp3'
+    
+    pygame.init()
+    pygame.mixer.music.load(audio_file)
+    pygame.mixer.music.play()
+
+    # Wait for the audio to finish playing
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
+
+user_saved_word = []
+
 # this function read tasks from myfile.txt and execute them
 def readtask():
+    
 
     # opens the file
     with open('myfile.txt','r') as a:
@@ -115,9 +179,21 @@ def readtask():
 
     # executes the tasks
     # if user calls jarvis then it will execute the if statement
-    if 'jarvis' in query or 'hello' in query or 'wake up jarvis' in query:
-        speak(f'Welcome sir talha, its {time.strftime("%I:%M %p")}, how can i help you')
-        print(f'Welcome, sir talha, its {time.strftime("%I:%M %p")}, how can i help you')
+
+    if 'jarvis' in query or 'wake up jarvis' in query or 'wake up' in query or 'jarvis' in query:
+        # speak("Wakingg....")
+        start_up()
+        speak('Logging innnn....')
+        print('Logging In....')
+        time.sleep(1)
+
+        speak("Online...")
+        print("Online...")
+
+
+
+        speak('I am up sir talha, how can i assist you with')
+        print('I am up sir talha, how can i assist you with')
 
         # it will take command from user
         while True:
@@ -134,7 +210,17 @@ def readtask():
                     print("i am going to sleep")
                     speak('ok sir i am going to sleep, wake me up when you need me')
                     wish()
+                    shut_down()
                     break
+
+                if tasks == 'None':
+                    continue
+
+                elif 'charge' in tasks:
+                    pyautogui.hotkey('win' , 'm')
+                    charge()
+                    speak('Charged..')
+                    print('Charged..')
 
                 # it will tell you name of the creator of jarvis
                 elif 'who made you' in tasks or 'who created you' in tasks:
@@ -142,7 +228,7 @@ def readtask():
                     speak("I am a virtual assistant")
                     speak("And my name is Jarvis")
 
-                elif 'who am i speaking with' in tasks:
+                elif 'who am i speaking with' in tasks or 'who am i talking with' in tasks:
                     speak("I am jarvis, i am a advanced artificial intelligence, created by sir muhammad talha")
                     speak("My name stands for just a rather very intelligent system, and i am here to help you")
 
@@ -200,6 +286,7 @@ def readtask():
                     t = time.strftime("%I:%M %p")
                     print(t)
                     speak(f"The time is {t}")
+                    task_complete()
 
                 # it will open instagram
                 elif 'open instagram' in tasks:
@@ -246,10 +333,19 @@ def readtask():
 
                     speak('playing' + myvideo)
                     kit.playonyt(myvideo)
+
+                elif 'search on youtube' in tasks:
+                    speak('what should i search on youtube')
+                    search = takecommand()
+
+                    speak(f'searching {search} on youtube')
+                    print(f"searching {search} on youtube")
+
+                    webbrowser.open(f'https://www.youtube.com/search?q={search}')
                 
                 # it will play or pause on youtube
                 elif 'pause' in tasks or 'unpause' in tasks:
-                    pyautogui.press('playpause')
+                    pyautogui.press('k')
 
                 # it will mute 
                 elif 'mute' in tasks:
@@ -291,6 +387,10 @@ def readtask():
                 elif 'theater mode' in tasks or 'theatre' in tasks:
                     speak('Entering theatre mode')
                     pyautogui.press('t')
+
+                elif 'miniplayer' in tasks:
+                    speak('Entering miniplayer mode')
+                    pyautogui.press('i')
 
                 # it will exit theatre mode
                 elif 'scroll down' in tasks:
@@ -440,7 +540,9 @@ def readtask():
                         print(i)
                         speak(i)
                         time.sleep(1)
+                    shut_down()
                     os.system('shutdown /s /t 1')
+                    break
                 
                 # it will play music
                 elif 'play music' in tasks:
@@ -626,13 +728,106 @@ def readtask():
                         else:
                             speak("Say yes or no sir")
 
+                elif 'remember this' in tasks or 'remember the word' in tasks:
+                    global user_saved_word
+
+                    if 'remember this' in tasks:
+                        speak("what should i remember")
+                        print("what should i remember")
+
+                        data = takecommand()
+                        user_saved_word.append(data)
+                        speak("done sir")
+                        print("done sir")
+
+                    else:
+                        query = query.replace('remember this', '')
+                        user_saved_word.append(query)
+                        speak("Remembered sir")
+                        print("Remembered sir")
+
+                elif 'tell me remembered words' in tasks or 'tell me the words' in tasks:
+                    if len(user_saved_word) == 0:
+                        speak("nothing to show")
+                        print("nothing to show")
+
+                    else:
+                        speak("sir these are the words i remember")
+                        print("sir these are the words i remember")
+
+                        numbers = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth']
+                        for index, word in enumerate(user_saved_word):
+                            speak(f'The {numbers[index]} word is {word}')
+                            print(f'The {numbers[index]} word is {word}')
+
+                # elif 'empty my words' in tasks or 'clear my words' in tasks or 'clear words':
+                #     if len(user_saved_word) == 0:
+                #         speak("Already clear")
+                #         print("Already clear")
+
+                #     else:
+                #         user_saved_word.clear()
+                #         speak("done sir")
+                #         print("done sir")
+
+                elif 'i am going to sleep' in tasks:
+                    speak("Ok sir")
+                    speak("did you want me to wake you up")
+
+                    while True:
+                        cm = takecommand()
+                        
+                        if 'sure' in cm:
+                            
+                            speak('tell the time')
+                            user_time = takecommand()
+                            user_time = user_time.replace('for', '')
+                            user_time = user_time.replace('.', '')
+
+                            if len(user_time) < 7:
+                                user_time = '0' + user_time
+                                
+                            user_time = user_time[0:2] + ':' + user_time[2:]
+
+                            speak(f"Setting time for {user_time}")
+                            print(f"Setting time for {user_time}")
+                            
+                            while True:
+                                current_time = time.strftime("%I:%M %p").lower()
+                                time.sleep(1)
+                                print(current_time)
+
+                                if current_time == user_time:
+                                    speak("Wake up sir")
+                                    print("Wake up sir")
+                                    
+                                    music_dir = "C:\\Users\\TALHA PC\\OneDrive\\Desktop\\music"
+                                    songs = os.listdir(music_dir)
+
+                                    os.startfile(os.path.join(music_dir, song[0]))
+                                    sleep_alarm()
+
+                                    speak("Welcome sir Talha, for your peaceful sleep")
+                                    print("Welcome sir Talha, for your peaceful sleep")
+                                    break
+                            break
+                            
+
+                        elif 'no' in cm:
+                            speak("ok sir")
+                            break
+
+                        else:
+                            speak("Say yes or no sir")
+
 
                 elif 'jarvis' in tasks:
                     speak("I am always here for you sir")
                 # when the user if else statement works then it will execute this
                 # or when the user says anything else then it will execute this
-                speak("Sir what can i do for you")
-                print("Sir what can i do for you")
+                time.sleep(1)
+                speak("Sir whats the next task")
+                print("Sir whats the next task")
 
             # in case of any error
             except Exception as e:

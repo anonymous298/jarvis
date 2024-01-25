@@ -1,0 +1,10 @@
+2024-01-21 21:43:53,732 - instabot version: 0.117.0 (bot) - INFO - Instabot version: 0.117.0 Started
+2024-01-21 21:43:53,732 - instabot version: 0.117.0 (bot) - DEBUG - Bot imported from C:\Users\TALHA PC\AppData\Local\Programs\Python\Python311\Lib\site-packages\instabot\bot\bot.py
+2024-01-21 21:43:53,733 - instabot version: 0.117.0 (api_login) - INFO - Not yet logged in starting: PRE-LOGIN FLOW!
+2024-01-21 21:43:55,323 - instabot version: 0.117.0 (api) - WARNING - ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2024-01-21 21:43:57,051 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: qe/sync/ returned response: <Response [200]>
+2024-01-21 21:43:57,879 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: launcher/sync/ returned response: <Response [200]>
+2024-01-21 21:44:05,549 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: accounts/contact_point_prefill/ returned response: <Response [429]>
+2024-01-21 21:44:05,549 - instabot version: 0.117.0 (api) - DEBUG - Responsecode indicates error; response content: b'{"message":"Please wait a few minutes before you try again.","status":"fail"}'
+2024-01-21 21:44:05,549 - instabot version: 0.117.0 (api) - ERROR - Request returns 429 error!
+2024-01-21 21:44:05,550 - instabot version: 0.117.0 (api) - WARNING - That means 'too many requests'. I'll go to sleep for 5 minutes.
