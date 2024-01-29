@@ -14,12 +14,15 @@ import pyautogui
 import requests
 import sys
 import pygame
+import threading
 from bs4 import BeautifulSoup
+from tkinter import *
+from tkvideo import tkvideo
 
 # creating an engine that will speak
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
+engine.setProperty('voice', voices[0].id)
 
 # creating an speak function that will speak
 def speak(audio):
@@ -130,7 +133,7 @@ def start_up():
 
     # Wait for the audio to finish playing
     while pygame.mixer.music.get_busy():
-        pygame.time.Clock().tick(10)
+        pygame.time.Clock().tick(10) 
 
 
 def shut_down():
@@ -219,6 +222,7 @@ def readtask():
                 elif 'charge' in tasks:
                     pyautogui.hotkey('win' , 'm')
                     charge()
+                    pyautogui.hotkey('win' , 'shift' , 'm')
                     speak('Charged..')
                     print('Charged..')
 
@@ -286,7 +290,6 @@ def readtask():
                     t = time.strftime("%I:%M %p")
                     print(t)
                     speak(f"The time is {t}")
-                    task_complete()
 
                 # it will open instagram
                 elif 'open instagram' in tasks:
@@ -525,7 +528,7 @@ def readtask():
                     os.system('taskkill /f /im explorer.exe')
 
                 # it will restart my computer
-                elif 'restart my system' in tasks or 'restart my pc' in tasks:
+                elif 'restart my system' in tasks or 'restart my pc' in tasks or 'restart my computer' in tasks:
                     speak('restarting my computer')
                     for i in range(5,0,-1):
                         print(i)
@@ -571,6 +574,13 @@ def readtask():
                         if user_song in songs:
                             speak("playing " + user_song)
                             os.startfile(os.path.join(music_dir, user_song))
+
+                elif 'play some refreshing' in tasks or 'play some refreshing music' in tasks or 'play some refreshing song' in tasks:
+                    speak("playing refreshing music")
+                    music_dir = 'C:\\Users\\TALHA PC\\OneDrive\\Desktop\\music\\refreshing music'
+                    songs = os.listdir(music_dir)
+                    rd = random.choice(songs)
+                    os.startfile(os.path.join(music_dir, rd))
 
                 # it will tell me a joke
                 elif 'tell me a joke' in tasks:
@@ -671,9 +681,15 @@ def readtask():
                 # it will minimize all
                 elif 'minimize all' in tasks or 'minimise all' in tasks:
                     speak("minimizing all")
+                    print("minimizing all")
                     pyautogui.keyDown('win')
                     pyautogui.press('m')
                     pyautogui.keyUp('win')
+
+                elif 'maximize all' in tasks or 'maximise all' in tasks:
+                    speak("maximizing all")
+                    print("maximizing all")
+                    pyautogui.hotkey("win",'shift','m')
 
                 elif 'close this' in tasks:
                     speak("closing this")
@@ -779,15 +795,11 @@ def readtask():
                         
                         if 'sure' in cm:
                             
-                            speak('tell the time')
-                            user_time = takecommand()
-                            user_time = user_time.replace('for', '')
-                            user_time = user_time.replace('.', '')
-
-                            if len(user_time) < 7:
+                            speak('enter the time in correct format')
+                            user_time = input("Enter your time here: ")
+                            if len(user_time) < 8:
                                 user_time = '0' + user_time
-                                
-                            user_time = user_time[0:2] + ':' + user_time[2:]
+                            
 
                             speak(f"Setting time for {user_time}")
                             print(f"Setting time for {user_time}")
@@ -804,11 +816,11 @@ def readtask():
                                     music_dir = "C:\\Users\\TALHA PC\\OneDrive\\Desktop\\music"
                                     songs = os.listdir(music_dir)
 
-                                    os.startfile(os.path.join(music_dir, song[0]))
+                                    os.startfile(os.path.join(music_dir, songs[0]))
                                     sleep_alarm()
 
-                                    speak("Welcome sir Talha, for your peaceful sleep")
-                                    print("Welcome sir Talha, for your peaceful sleep")
+                                    speak("Welcome sir Talha, from your peaceful sleep")
+                                    print("Welcome sir Talha, from your peaceful sleep")
                                     break
                             break
                             
@@ -825,7 +837,8 @@ def readtask():
                     speak("I am always here for you sir")
                 # when the user if else statement works then it will execute this
                 # or when the user says anything else then it will execute this
-                time.sleep(1)
+                task_complete()
+                time.sleep(0.5)
                 speak("Sir whats the next task")
                 print("Sir whats the next task")
 
