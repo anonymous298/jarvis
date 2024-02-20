@@ -225,10 +225,11 @@
 #     time.sleep(0.2)
 #     winsound.Beep(frequency, duration)
 #     time.sleep(1.5)
-user_time = input('Enter time in 24 hours format: ')
-user_time = user_time.replace('for', '')
-user_time = user_time.replace('.', '')
-print(user_time)
-print(len(user_time))
-user_time = user_time[0:2] + ':' + user_time[2:]
-print(user_time)
+# user_time = input('Enter time in 24 hours format: ')
+# user_time = user_time.replace('for', '')
+# user_time = user_time.replace('.', '')
+# print(user_time)
+# print(len(user_time))
+# user_time = user_time[0:2] + ':' + user_time[2:]
+# print(user_time)
+ 

@@ -8,7 +8,6 @@ import pyjokes
 import pywhatkit as kit
 import sys
 import random
-from test import timer
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -25,7 +24,8 @@ def takecommand():
 
     with sr.Microphone() as source:
         print("Listening...")
-        # r.pause_threshold = 2
+        r.pause_threshold = 0.5
+        r.adjust_for_ambient_noise(source)
         audio = r.listen(source,10,8)
 
     try:
@@ -240,10 +240,12 @@ if __name__ == "__main__":
 
             kit.playonyt(query)
 
-        elif "timer" in query:
-            speak("Starting...")
-            print("Starting...")
-            timer()
+        elif 'youtube' in query and 'instagram' in query and 'facebook' in query:
+            webbrowser.open('https://www.youtube.com/')
+            webbrowser.open('https://www.instagram.com/')
+            webbrowser.open('https://www.facebook.com/')
+
+            speak("Task completed sir!")
 
         elif "bye" in query or 'nothing' in query or 'no thanks' in query:
             speak("Bye sir talha. Have a good day")
